@@ -1,23 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import UserInput from "./Components/Form/Form";
+import Table from "./Components/Table/Table";
+import { useState } from "react";
 function App() {
+  const [userInput, setUserInput] = useState(null);
+
+  
+  const calculateHandler = (userInput) => {
+    setUserInput(userInput);
+  };
+  const pricing = [];
+  if (userInput) {
+    let selling = userInput["selling"];
+    const buying = userInput["buying"];
+    const duration = userInput["duration"];
+
+    for (let i = 0; i < duration; i++) {
+      const totalprice = buying-selling;
+      pricing.push({
+        totalprice:totalprice
+      })
+    }
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
+      <UserInput onCalculate={calculateHandler} />
+      {!userInput && (
+        <p className="text-center fs-2 text-light mt-5">
+          No Investment calculated Yet
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      )}
+      {userInput && (
+        <Table data={pricing} initialInvestment={userInput["totalprice"]} />
+      )}
     </div>
   );
 }
